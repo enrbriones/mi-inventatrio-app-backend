@@ -25,8 +25,10 @@ public interface IProductoDao extends JpaRepository<Producto,Long> {
 
     public Page<Producto> findAllByOrderByFechaCaducidadAsc(Pageable pageable);
 
-    //Query principal de la aplicación. Devuelve datos paginados y según el tipo enviado.
-    @Query("from Producto p where p.tipo.id= case when ?1 is null then p.tipo.id else ?1 end order by p.fechaCaducidad asc")
+    // Query principal de la aplicación. Devuelve datos paginados y según el tipo enviado.
+    // Reemplazamos la query comentada para que funcione en PostgreSQL.
+    // @Query("from Producto p where p.tipo.id= case when ?1 is null then p.tipo.id else ?1 end order by p.fechaCaducidad asc")
+    @Query("select p from Producto p where p.tipo.id= (case when ?1 < 1L then p.tipo.id else ?1 end) order by p.fechaCaducidad asc")
     public Page<Producto> findAllByTipoByOrderByFechaCaducidadAsc(Long tipo_id,Pageable pageable);
 
 }
